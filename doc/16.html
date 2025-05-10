@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>重磅发布——2D's 3D Game</title>
+    <meta name="author" content="Alone">
+  </head>
+  <body>
+    <p><b><strong style="font-size: 32px;">重磅发布——2D's 3D Game</strong></b></p>
+    <p><br>
+    </p>
+    <p>博客浏览次数：</p>
+    <img src="https://count.kjchmc.cn/get/@melonblog-16?theme=minecraft"
+      alt="">
+    <p><br>
+    </p>
+    <p><a href="https://www.luogu.com.cn/problem/U326438" target="_blank">点击跳转</a>1.0版本的洛谷题目 2023.8.12</p>
+    <p><a href="https://www.luogu.com.cn/article/rfvm68w5" target="_blank">点击跳转</a>1.5版本的洛谷文章 2024.2.8</p>
+    <p><br>
+    </p>
+    <p>该游戏历经约一年时间，终于在今天发布了。游戏使用C++制作，依附于Windows平台（Windows的颜色控制头文件需要），是我喜欢的控制台游戏风。为什么拖这么久呢？一是不知道如何升级，二是正在参赛不好发布。至于为什么做新版本，是因为老师突然告诉我比赛又有了（去年的作品请见博客之<em>超级工具箱</em>），想到之前有搞过叫2D's 3D Game这么个玩意就重新整了整发布。</p>
+    <p>强迫症特色：程序有一套完备的防输错数的判定系统，比如地图大小你要是输入负数直接不给你下一步，选择出生位置和结束位置时坐标输入的不在地图上、或者模式不是1234中的一个，也不给你下一步，甚至如果你出生位置和结束位置重复了（包括只有1行地图的左上角和左下角重叠的情况），也会给您识别出来。（提取自评委简介）</p>
+    <p>等宽输出：若地图其中一个数有大于1个数位，如100，强制其它格子按照最大数位的宽度输出。</p>
+    <p>最新版本命名为Share版，不仅是分享，更是想创建一个游玩的Community。后续会加入竞速版本以及通关反作弊验证。（咕咕咕）</p>
+    <p>游玩方式是复制源码自行编译，游戏源码和发布时间都在底部。</p>
+    <p><br>
+    </p>
+    <p><strong>给评委看的简介，相信你也能看懂：</strong></p>
+    <p>2D's 3D Game 地图探险 介绍文档<br>
+      亲爱的评委：<br>
+      如果您不读这个文档，你甚至不知道这个游戏应该怎么去操作。请务必读完，作者的文采“非常好”。（您也可以跳到第3页底下看一下总结的规则，但是只看那个的话不易理解）<br>
+      <br>
+      这个游戏可以帮助你学习深度优先搜索和广度优先搜索，在地图里面探索时可以存档，走错的时候能读档回溯，继续探索；还能锻炼你的抽象思维，只要关掉多彩模式，想象格子高度组成的三维地图，并一步步走。<br>
+      <br>
+      假装你在Minecraft里面玩耍。为了把问题简化，规定你只能在↑↓←→↖↗↙↘方向移动，每次移动一格。突然，你遇到了一个俯视图为矩形的地图，地图每个格子高度各异，最低为0，最高为9。一个像柱子一样直插云霄的9屹立在你的面前，你脚下站着的是0。地图门口有个告示牌：“这里是2D's 3D Game！‘亲爱的’史蒂夫，从这个迷宫的一个角落出发，到达另一个角落，即可找到——绿宝石。”<br>
+      你说：“啊？绿宝石？我还不如去村民家抢嘞！”<br>
+      从三个视图的俯视图来看一个类似上面地图一样的方块堆叠的东西，可以把方块的高度依次表示，例如：<br>
+      1 3 2<br>
+      这个就表示了一个领奖台的方块样式。 长这样：<br>
+      <br>
+      在2D's 3D Game中，会有一个m * n的地图，地图的每个数就代表了对应位置的方块的高度。<br>
+      你看着面前的告示牌，默默选择了左上角到右下角。突然不小心飞过来一个二向箔（啊！）你被拍扁进了二维世界，地图从立体方块也变成了一个表示俯视图的方块高度的地图。<br>
+      <br>
+      0 1 2 3 4 5 0<br>
+      9 5 4 3 2 1 0<br>
+      X X X X X X X（省略）<br>
+      <br>
+      （未打开多彩模式）<br>
+      看到没有？那个9就是屹立的那个柱子！<br>
+      你说：“这不简简单单，顺着第一行自动跳跃，大跳到0，再下一格，不就赢了。”<br>
+      然而，当你按d的时候，却迟迟没有反应。——哦，还要输入回车（真麻烦）。到了5，正准备跳下去，突然飞过来一个消息：YOU CANNOT DO THIS!!!禁止通行!!!<br>
+      WTF！（Welcome To Facebook）这咋不能走？你抬头，才看见游戏规则：<br>
+      ↑↓←→这几个方向，有且仅有这几种走法：平移；下一格；下两格；上一格。如果下超过两格，就会摔死；而且不能二段跳。<br>
+      你说：“那算了，迷你世界，启动！——啊，我怎么出不去！救命啊！！！”<br>
+      聪明的你从5退回到了3，往下走了一格，再一直向右，这样就通关啦！<br>
+      突然飞过来一个消息：诶诶还没结束呢，作者介绍游戏玩法的使命还没结束呢，来，下一关！<br>
+      WTF！！！<br>
+      1 2 9<br>
+      3 1 9<br>
+      3 2 9<br>
+      4 1 9<br>
+      9 3 9<br>
+      1 2 4<br>
+      消息：这一关来斜着走，祝好运！<br>
+      接下来为了表示清楚你所在位置，将以(数字)[行][列]的形式说明。<br>
+      你在1[1][1]看见右下方也有个1，身为老玩家你立马按了sd斜着走。——诶，不行！这里，↖↗↙↘的按键分别是qezc。你骂了一句，按下了c（并回车），突然又飞过来一条消息：YOU CANNOT DO THIS!!!禁止通行!!!<br>
+      啊？怎么不能走？<br>
+      因为3[2][1]和2[1][2]挡住了你的去路！如果把这两个其中一个改成1或0，你就能旋转跳一下跳到1[2][2]了。<br>
+      你说：“行吧。”从1[1][1]到2[1][2]再到1[2][2]，可真是愉快呢。<br>
+      你想去1[4][1]，想着能不能连着输ss再回车……诶！可以！事实上，你可以把通关的整串操作都一起输进去再回车（哈哈）。<br>
+      扯远了。你发现到了1[4][1]之后，不能下去走了，骂自己不会二段跳，又回到了2[3][2]。到4[4][1]，试了一下按c旋转跳，还真跳到3[5][2]！<br>
+      你又想要按个c，旋转跳到4[6][3]……对不起，不行！斜着移动只能平移、下一格、下两格！<br>
+      你说：“什么鬼游戏！劳资不玩啦！！！”<br>
+      <br>
+      总结一下游戏的规则：<br>
+      1.玩家可以在上下左右四个方向移动，每次能平移、上一格、下一格、下两格。<br>
+      2.玩家可以在左上、右上、左下和右下四个方向移动，每次可以平移；符合以下条件时，可以下一格或下两格：<br>
+      a b<br>
+      c d<br>
+      （欲从a走到d）<br>
+      当b≤a或c≤a时，可以从a到d。<br>
+      3.玩家选择↖（地图左上角，下同）↗↙↘中任两个不同的位置，或者任两个不同的坐标作为出生位置和结束位置，从出生位置走到结束位置就赢了（这不废话吗）。<br>
+      <br>
+      突然！突然！飞过来一个标签，啪的打到你的脸上。你摘下来一看：<br>
+      “按数字键有惊喜。”<br>
+      嗯？<br>
+      <br>
+      0重玩（回到出生点）,1选择玩家颜色,2存档读档,3自定义按键,4开关多彩模式,5开关显示可到达地点,6显示坐标,7直接传送,8修改方块,9还原地图<br>
+      <br>
+      我们来一个一个介绍。<br>
+      0和1这两个就不必多说了。2存档读档有10个档位，可以储存游戏时候玩家的坐标。这个好处是，可以用来学习深度优先搜索和广度优先搜索，以及回溯算法。当然，你可以直接修改源代码中的sav[]数组的定义来增加存档数目（必须把管理存档的代码里面的那个for循环的第二个条件的10一并改了），<br>
+      3自定义按键，你可以定义你游戏按键为你喜欢的任意字符（必须是ASCII字符表里的），例如O']\`~%@都没有问，这个按键储存在char字符W、S、A、D、Q、E、Z、C中。<br>
+      4开关多彩模式，根据你地图的最高点程序设置了10套方案（0~9），储存在cll[][]数组里，其中第一个[]代表了地图最高点，也就是选择大方案；第二个[]代表了每个格子的高度，根据格子高度输出对应颜色。如果这个格子高度超出9，就输出粉色。<br>
+      5开关显示可到达地点，你在当前位置能一步之内走到的格子都会用绿色输出，并且这些格子不支持多彩模式（其它格子不影响）<br>
+      6、7不说了，8修改方块，你可以修改一个地图上存在的方块，修改为任意整数都可以。<br>
+      9还原地图，还原成修改方块前你输入的地图的样子，不可逆。<br>
+      程序还精心准备了一个统计你作弊次数的变量，7、8都会被统计进去。<br>
+      0重玩，这里说一下。重玩后使用的是修改后的地图，并且你一开始选择的出生点和结束点都不能改变，作弊次数会清零，存档会保留。<br>
+      <br>
+      程序还还准备了一套完备的防输错数（大部分是评委您故意的）的判定系统，比如地图大小你要是输入负数直接不给你下一步，选择出生位置和结束位置时坐标输入的不在地图上、或者模式不是1234中的一个，也不给你下一步，嘿嘿，甚至如果你出生位置和结束位置重复了（包括只有1行地图的左上角和左下角重叠的情况），咱也会给您识别出来，哈。<br>
+      <br>
+      现在，开始你的2D's 3D Game之旅吧！<em>[1]</em><br>
+      <br>
+      <em>[1]</em>引用Phigros游戏教学最后一句“现在，开始你的Phigros之旅吧！”<br>
+    </p>
+    <p></p>
+    <br>
+    <p><strong>游戏内自述：</strong></p>
+    <p>提示: 游玩时可以连续输入按键再回车。<br>
+      这个介绍是老版本遗留的,新版新写了个介绍(参赛时候的要求),最好是看那个。新做了个教程程序,可以配合这个主程序使用。<br>
+      by Alone, IQ Online Studio 智商在线工作室(非真实存在的工作室)。 QQ:34067513 See the website 查看网站: https://melonchats.github.io/melon/a.html<br>
+      详细介绍（1.0原始介绍和2.0视频介绍,因为是参赛作品会晚上线）可见https://www.luogu.com.cn/blog/perryding/2ds3d-game。以下是精简版。<br>
+      这是一个用二维的矩阵来玩三维的地图的游戏,游戏中的方块像Minecraft一样, 地图中的数字代表了俯视图中每一格地面方块的高度。<br>
+      如,地图中的2代表了这一格有两个竖着垒的方块。<br>
+      你可以往上下左右平移,你也可以往上爬一格、往下走一格、往下走两格,如从1到2,2到3等。<br>
+      你也可以往左上,右上,左下,右下平移。你所在位置和目标位置组成的田字格中,如果其它两个方块的高度都小于等于所在位置和目标位置的高度,那你就能平移,否则不行。你也可以斜着下一格、下两格,但是不能往上爬。这很符合现实物理和Minecraft。<br>
+      比如说这个:<br>
+      1 2<br>
+      2 1<br>
+      当你要从1到1, 你不能往↖↘走; 但要从2到2,可以↗↙走。<br>
+      <br>
+      原版说明2023.6.29<br>
+      by Alone, IQ Online Studio. QQ:34067513 See the website: https://melonchats.github.io/melon/a.html<br>
+      this is a game that use 2d number to play 3d PaoKu. like Minecraft, the nums in map is the heights of the blocks.<br>
+      for example, the num 2 just 2 blocks in MC.<br>
+      To go up, you can only go up 1 height. like 1 to 2, 2 to 3 and so on. and you can only move in four directions: front ^, back v, left &lt;, right &gt;.<br>
+      To go down, you can go down 1 height or 2 height, if above this num, you'll fall and lose some health. isn't it? and you can move in eight directions.<br>
+      To go down or go front, you should notice: if your direction is left-front, right-front, left-back, right-back, you can move when the other two num beside below or equal your now num and expect num.<br>
+      like this:<br>
+      1 2<br>
+      2 1<br>
+      when you are in 1, you can't use right-back or left-front to the other 1, but you can use right-front and left-back from 2 to 2.</p>
+    <p><br>
+    </p>
+    <p>再次感谢<a href="https://www.kjchmc.cn/" target="_blank">@kjchmc</a>的网盘！点击进入<a
+        href="https://melonchats.github.io/melon/thank.html" target="_blank">鸣谢</a>界面</p>
+    <p><br>
+    </p>
+    <p>版本参考：</p>
+    <p>初代 <span style="color: #9999ff;">v1.0</span> <span style="color: #ff6666;">2023.6.29/洛谷发布2023.8.12</span></p>
+    <p>参赛 <span style="color: #9999ff;">v2.0</span> <span style="color: #ff6666;">开始制作2024.2.26/完工2024.3.14</span></p>
+    <p>参赛自用/Self版（有自述） <span style="color: #9999ff;">v2.0</span></p>
+    <p>Share <span style="color: #9999ff;">v2.5</span>（此版本CPU占用少，但是等宽输出可能刷新不及时）</p>
+    <p>Share-HighCPU <span style="color: #9999ff;">v2.5</span>（此版本每走一步重新计算一次地图输出，CPU占用高）</p>
+    <p><br>
+    </p>
+    <p><a href="https://github.com/hitele/2D-s_3D_Game" target="_blank">Github仓库</a>（该链接为新仓库，临时仓库为<a
+        href="https://github.com/melonchats/melon/tree/main/2D%27s%203D%20Game"
+        target="_blank">/melon</a>）</p>
+    <p><br>
+    </p>
+    <p>下载链接：</p>
+    <p>Github Release发布版本</p>
+    <p><a href="https://github.com/hitele/2D-s_3D_Game/releases/tag/publish"
+        target="_blank">链接</a></p>
+    <p><br>
+    </p>
+    <p>UTF-8版本</p>
+    <p><a href="https://file.kjchmc.cn/d/Alone/2D%27s%203D%20Game/2D%27s%203D%20Game-UTF-8.zip?sign=0-hKKDEpVbZx9AtmR-pvaacUl82OG_q4NpShpecTZZk=:0"
+        target="_blank">整合压缩包</a></p>
+    <p><br>
+    </p>
+    <p>ANSI版本</p>
+    <p><a href="https://file.kjchmc.cn/d/Alone/2D%27s%203D%20Game/2D%27s%203D%20Game-ANSI.zip?sign=FOmlWEF46CZMTqF1uATSMV2VmEJYvg5odYPOIg0V_rE=:0"
+        target="_blank">整合压缩包</a></p>
+    <p><br>
+    </p>
+    <p>由于我的Windows是英文版，编码容易乱，所以给出txt格式UTF-8/ANSI编码版本各一份。</p>
+    <p>1.x版本内置一个地图，2.x版本内置两个地图。</p>
+    <p>如果我勤奋的话，会考虑出一个地图编辑器（</p>
+    <p><br>
+    </p>
+    <p><br>
+    </p>
+    <p>2024.7.31</p>
+    <p><br>
+    </p>
+    <p><a href="https://melonchats.github.io/melon/blog.html" target="_top">返回博客主页</a></p>
+    <p></p>
+  </body>
+</html>
