@@ -4,18 +4,17 @@
 #include <cstdio>
 using namespace std;
 
-//Written by ChatGPT-4o and DeepSeek
-//by PerryDing, QQ: 34067513
-
-// 计算哈希值的统一函数，支持多种哈希算法，根据file参数决定输入类型
-// @param data: 若file为false则是输入字符串，若file为true则是文件路径
-// @param file: 输入类型标识，true表示处理文件内容，false表示处理字符串内容
-// @param algId: 哈希算法ID（默认SHA-256，常见算法ID如下）：
-//              - CALG_SHA_256: SHA-256算法（256位，默认值）
-//              - CALG_SHA1: SHA-1算法（160位）
-//              - CALG_SHA_512: SHA-512算法（512位）
-//              - CALG_MD5: MD5算法（128位，安全性较低，不推荐新场景）
-// @return: 十六进制字符串形式的哈希值，错误时返回错误信息
+/*Written by ChatGPT-4o and DeepSeek
+by PerryDing, QQ: 34067513
+	计算哈希值的统一函数，支持多种哈希算法，根据file参数决定输入类型
+	@param data: 若file为false则是输入字符串，若file为true则是文件路径
+	@param file: 输入类型标识，true表示处理文件内容，false表示处理字符串内容
+	@param algId: 哈希算法ID（默认SHA-256，常见算法ID如下）：
+		CALG_SHA_256: SHA-256 256位
+		CALG_SHA1: SHA-1 160位
+		CALG_SHA_512: SHA-512 512位
+		CALG_MD5: MD5 128位
+@return: 十六进制字符串形式的哈希值，错误时返回错误信息*/
 std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_256) 
 {
 	HCRYPTPROV hProv = NULL;         // 加密服务提供者句柄
@@ -25,7 +24,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 	BYTE buffer[4096];               // 文件读取缓冲区
 	std::string result;              // 存储最终的十六进制哈希字符串
 	
-	// ----------------------- 输入处理分支 -----------------------
+	// 输入处理分支
 	if (file) 
 	{
 		// 以只读方式打开文件
@@ -36,7 +35,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		}
 	}
 	
-	// ----------------------- 获取加密服务提供者 -----------------------
+	// 获取加密服务提供者
 	// 获取PROV_RSA_AES类型的加密服务提供者，CRYPT_VERIFYCONTEXT用于简化上下文获取（无需真实证书）
 	if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) 
 	{
@@ -48,7 +47,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		return "Error: CryptAcquireContext failed.";
 	}
 	
-	// ----------------------- 创建哈希对象（使用传入的算法ID）-----------------------
+	// 创建哈希对象（使用传入的算法ID）
 	// 使用algId指定的算法创建哈希对象（关键扩展点：支持多种哈希算法）
 	if (!CryptCreateHash(hProv, algId, 0, 0, &hHash)) 
 	{
@@ -61,7 +60,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		return "Error: CryptCreateHash failed.";
 	}
 	
-	// ----------------------- 计算哈希值（文件/字符串分支）-----------------------
+	// 计算哈希值（文件/字符串分支）
 	if (file) 
 	{
 		// 文件输入模式：分块读取文件并逐步计算哈希
@@ -96,7 +95,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		}
 	}
 	
-	// ----------------------- 获取哈希值长度 -----------------------
+	// 获取哈希值长度
 	// 查询哈希值的原始字节长度（不同算法长度不同，如SHA-256为32字节，MD5为16字节）
 	DWORD hashSize = 0;
 	DWORD sizeLen = sizeof(hashSize);
@@ -112,7 +111,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		return "Error: CryptGetHashParam failed.";
 	}
 	
-	// ----------------------- 获取实际哈希字节数据 -----------------------
+	// 获取实际哈希字节数据
 	// 分配内存存储原始哈希字节数据
 	BYTE* hashValue = new BYTE[hashSize];
 	if (!CryptGetHashParam(hHash, HP_HASHVAL, hashValue, &hashSize, 0)) 
@@ -128,7 +127,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		return "Error: CryptGetHashParam failed.";
 	}
 	
-	// ----------------------- 转换为十六进制字符串 -----------------------
+	// 转换为十六进制字符串
 	// 遍历每个字节，格式化为两位十六进制字符串（如0x0A → "0a"）
 	for (DWORD i = 0; i < hashSize; ++i) 
 	{
@@ -137,7 +136,7 @@ std::string PD_hash(const std::string& data, bool file, DWORD algId = CALG_SHA_2
 		result.append(hex); // 拼接至结果字符串
 	}
 	
-	// ----------------------- 资源清理 -----------------------
+	// 资源清理
 	delete[] hashValue;          // 释放动态分配的哈希字节数组
 	CryptDestroyHash(hHash);     // 销毁哈希对象句柄
 	CryptReleaseContext(hProv, 0); // 释放加密服务提供者句柄

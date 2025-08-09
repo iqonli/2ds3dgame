@@ -6,9 +6,24 @@ using namespace std;
 int m,n,f,s,x,y,cc,oo,bir,fin,birx,biry,finx,finy,tp,ttp,_d,map_style,max_wide=1;
 int a[1000][1000];//地图,上下左右四周都有-1环绕（便于判定越界行为）,左上角为1,1,右下角为m,n
 int amap[1000][1000];//地图副本
-void _color(int __C)
+bool mapPassed=false;
+string mapPasswd;
+void _color(int __C=7)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),__C);
+}
+int hex_to_10(char a)
+{
+	if(a>='0' and a<='9')return a-'0';
+	a=tolower(a);
+	return a-'a'+10;
+}
+int rando(int a,int b)
+{
+	static random_device rd;
+	static mt19937 gen(rd());
+	uniform_int_distribution<> dis(a, b);
+	return dis(gen);
 }
 void err()
 {
@@ -20,8 +35,8 @@ int main()
 {ch:
 	system("title 2D's 3D Game Map Creator");
 	puts("2D's 3D Game Map Creator");
-	puts("by Alone, IQ Online Studio 智商在线工作室(非真实存在的工作室)。 QQ:34067513 See the website 查看网站: https://melonchats.github.io/melon/a.html");
-	puts("\n欢迎来到2D's 3D Game Map Creator。(目前版本只能格式化地图)");
+	puts("by IQ Online Studio, github.com/iqonli/2ds3dgame");
+	puts("\n欢迎来到2D's 3D Game Map Creator。(目前版本只能格式化地图和加密)");
 	system("pause");
 	char _x='a';
 //	puts("输入a手动输入地图,b从本地选择。");
@@ -29,9 +44,44 @@ int main()
 //	cin>>_x;
 	if(_x=='a')
 	{
-		puts("请输入地图大小（m行n列,空格隔开）。");
+		puts("请输入地图大小(m行n列,空格隔开),输入\"-3 -3\"以生成加密竞速地图。");
 		i_input
 		cin>>m>>n;
+		if(m==-3 and n==-3)
+		{
+			while(1)
+			{
+				cout<<"\n输入密码,一行,禁止空格,输入auto来自动生成一段10位密码。\n";
+				i_input
+				cin>>mapPasswd;
+				if(mapPasswd=="auto")
+				{
+					mapPasswd="";
+					string chara="!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+					for(int f=0;f<10;f++)
+					{
+						mapPasswd=mapPasswd+chara.at(rando(0,chara.size()-1));
+					}
+				}
+				_color(48);
+				cout<<mapPasswd;
+				_color();
+				cout<<"\n是你想要的密码吗?1 yes, 0 no.";
+				char x;
+				i_input
+				cin>>x;
+				if(x=='1')
+				{
+					puts("请输入地图大小(m行n列,空格隔开)。");
+					i_input
+					cin>>m>>n;
+					break;
+				}
+				cout<<endl;
+			}
+			mapPassed=true;
+		}
+		
 		if(m<1 or n<1)
 		{
 			err();
@@ -87,62 +137,31 @@ int main()
 		mapswords+=(tptp+"\n");
 	}
 	cout<<"\n地图已经录入完毕,输入你地图的名字(不可含有空格,无需后缀名),完成导出:\n";
-	/* .\\map\\name_style.map */
-	/*old{
-		char 	_y10[100000]=".\\map\\",
-		_y11[100000]=".\\map\\",
-		_y2[100000],
-		_y30[]="_style0.map",
-//			_y31[]="_style1.map";
-		_y31[]=".map";
-		cin>>_y2;
-		strcat(_y10,_y2);strcat(_y10,_y30);//_y10为style0
-		strcat(_y11,_y2);strcat(_y11,_y31);//_y11为style1
-	}*/
-	string _1=".\\map\\",_2,_3=".map",__y11;
+	string _1=".\\map\\",_2,_3=mapPassed?".mapx":".map",__y11;
 	cin>>_2;
 	__y11=_1+_2+_3;
-	
-//	if(map_style==0)
-//	{
-//		freopen(_y10,"w",stdout);
-//		{cout<<m<<' '<<n<<" 0"<<endl;//0
-//		for(f=1;f<=m;f++)
-//		{
-//			for(s=1;s<=n;s++)
-//			{
-//				printf("%d",a[f][s]);
-//			}
-//			if(f<m)printf("\n");
-//		}
-//		puts("");
-//		if(oo==0)
-//			cout<<oo<<' '<<bir<<' '<<fin<<' '<<cc;
-//		if(oo==1)
-//			cout<<oo<<' '<<birx<<' '<<biry<<' '<<finx<<' '<<finy<<' '<<cc;}
-//		freopen("CON","w",stdout);
-//		{cout<<m<<' '<<n<<" 0"<<endl;//0
-//			for(f=1;f<=m;f++)
-//			{
-//				for(s=1;s<=n;s++)
-//				{
-//					printf("%d",a[f][s]);
-//				}
-//				if(f<m)printf("\n");
-//			}
-//			puts("");
-//			if(oo==0)
-//				cout<<oo<<' '<<bir<<' '<<fin<<' '<<cc;
-//			if(oo==1)
-//				cout<<oo<<' '<<birx<<' '<<biry<<' '<<finx<<' '<<finy<<' '<<cc;}
-//		cout<<"\n以上内容已输出到"<<_y10<<endl;
-//		
-//	}
-//	freopen(_y11,"w",stdout);
 	ofstream file1(__y11,ios::out);
 	if(!file1.is_open())return 0;
-	
-	{file1<<m<<' '<<n<<" 1"<<endl;//1
+	if(mapPassed)
+	{
+		string mapPasswdHash=PD_hash(mapPasswd,false);
+		int ddd=0;
+		file1<<"-3 -3\n"<<m<<' '<<n<<" 1"<<endl;//1
+		for(f=1;f<=m;f++)
+		{
+			for(s=1;s<n;s++)
+			{
+				file1<<to_string(a[f][s]^hex_to_10(mapPasswdHash.at(ddd%64)))<<" ";
+				ddd++;
+			}file1<<to_string(a[f][n]^hex_to_10(mapPasswdHash.at(ddd%64)));
+			ddd++;
+			if(f<m)file1<<"\n";
+		}
+		file1<<"\n";
+	}
+	else
+	{
+		file1<<m<<' '<<n<<" 1"<<endl;//1
 		for(f=1;f<=m;f++)
 		{
 			for(s=1;s<n;s++)
@@ -152,30 +171,17 @@ int main()
 			if(f<m)file1<<"\n";
 		}
 		file1<<"\n";
-//		if(oo==0)
-//			cout<<oo<<' '<<bir<<' '<<fin<<' '<<cc;
-//		if(oo==1)
-//			cout<<oo<<' '<<birx<<' '<<biry<<' '<<finx<<' '<<finy<<' '<<cc;
 	}
-//	freopen("CON","w",stdout);
 	file1<<mapswords<<endl;
 	file1.close();
-	{cout<<m<<' '<<n<<" 1"<<endl;//1
-	for(f=1;f<=m;f++)
-	{
-		for(s=1;s<n;s++)
-		{
-			printf("%d ",a[f][s]);
-		}printf("%d",a[f][n]);
-		if(f<m)printf("\n");
-	}
-//	puts("");
-//	if(oo==0)
-//		cout<<oo<<' '<<bir<<' '<<fin<<' '<<cc;
-//	if(oo==1)
-//		cout<<oo<<' '<<birx<<' '<<biry<<' '<<finx<<' '<<finy<<' '<<cc;
-	}
-	cout<<endl<<mapswords<<endl;
+	
+	//打印
+	ifstream file(__y11);
+	string content(
+					   (istreambuf_iterator<char>(file)),
+					   istreambuf_iterator<char>()
+					   );
+	cout<<content<<endl;
 	cout<<"\n以上内容已输出到"<<__y11<<endl;
 	
 	string t1="";
@@ -189,6 +195,15 @@ int main()
 		if(f<m)t1=t1+"\n";
 	}
 	cout<<"地图纯码:"<<PD_hash(t1,false);
+	if(mapPassed)
+	{
+		cout<<"\n地图密码:";
+		_color(48);
+		cout<<mapPasswd;
+		_color(14);
+		cout<<endl<<"墙裂建议稍后手动把地图纯码附在地图的话中,防止输入错误的密码。\n";
+		_color();
+	}
 	
 	system("pause");
 	return 0;
