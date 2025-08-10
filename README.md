@@ -2,6 +2,8 @@
 
 > 一款控制台2D地图探险游戏
 
+我们的主页：https://github.com/iqonli/iqonli
+
 项目使用[GNU Lesser General Public License v3](LICENSE)，项目中任何文件和代码、头文件（不包括7-Zip发行版）均采用此许可证，仅在此提示，恕不在代码中标识。
 
 项目使用了7-Zip Extra的编译后版本：
@@ -13,133 +15,7 @@
 Source code of binaries can be found at:
 http://www.7-zip.org/
 ```
-```
-  7-Zip Extra
-  ~~~~~~~~~~~
-  License for use and distribution
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Copyright (C) 1999-2024 Igor Pavlov.
-
-  7-Zip Copyright (C) 1999-2024 Igor Pavlov.
-
-  The licenses for files are:
-
-    - 7za.exe:
-         - The "GNU LGPL" as main license for most of the code
-         - The "BSD 3-clause License" for some code
-         - The "BSD 2-clause License" for some code
-    - All other files: the "GNU LGPL".
-
-  Redistributions in binary form must reproduce related license information from this file.
-
-  Note: 
-        You can use 7-Zip Extra on any computer, including a computer in a commercial 
-        organization. You don't need to register or pay for 7-Zip.
-
-  It is allowed to digitally sign DLL and EXE files included into this package
-  with arbitrary signatures of third parties.
-
-
-GNU LGPL information
---------------------
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You can receive a copy of the GNU Lesser General Public License from
-    http://www.gnu.org/
-
-
-
-BSD 3-clause License in 7-Zip code
-----------------------------------
-
-  The "BSD 3-clause License" is used for the following code in 7za.exe
-    -  ZSTD data decompression.
-       that code was developed using original zstd decoder code as reference code.
-       The original zstd decoder code was developed by Facebook Inc,
-       that also uses the "BSD 3-clause License".
-
-  Copyright (c) Facebook, Inc. All rights reserved.
-  Copyright (c) 2023-2024 Igor Pavlov.
-
-Text of the "BSD 3-clause License"
-----------------------------------
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors may
-   be used to endorse or promote products derived from this software without
-   specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
----
-
-
-
-
-BSD 2-clause License in 7-Zip code
-----------------------------------
-
-  The "BSD 2-clause License" is used for the XXH64 code in 7za.exe.
-
-  XXH64 code in 7-Zip was derived from the original XXH64 code developed by Yann Collet.
-
-  Copyright (c) 2012-2021 Yann Collet.
-  Copyright (c) 2023-2024 Igor Pavlov.
-
-Text of the "BSD 2-clause License"
-----------------------------------
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
----
-```
+7-Zip的`License.txt`已附在文后。
 
 ## 重要提示
 
@@ -282,7 +158,7 @@ d b
 -游戏目录文件结构（gameFolderFileList.txt，验证游戏文件完整性）
 -游戏程序路径、哈希值（gamepath.txt，gamehash.txt，验证游戏文件）
 -7-zip程序哈希值（7za.dll-hash.txt，7za.exe-hash.txt，7zxa.dll-hash.txt）
--硬件配置信息（CPU、内存、显卡等，以wmic开头的系列文件）
+-硬件配置信息（CPU、内存、显卡等，以wmic开头的系列文件，该部分信息较敏感，您可以在游戏中选择禁用）
 -系统信息（systeminfo.txt，操作系统版本、BIOS、网络配置等）
 ```
 
@@ -297,7 +173,7 @@ d b
 
 通过哈希校验与录屏的双重验证，社区可确认您确实并未篡改游戏文件、使用作弊工具等。
 
-附：游戏使用的文件及其哈希SHA-256校验值正常值记录（实时更新）
+附：游戏使用的文件及其哈希SHA-256校验值正常值记录（实时更新；游戏程序本体的白名单仅记录每个大版本的最终稳定修复版本）
 
 *哈希校验值符合此记录的（单个文件符合对应的其中一个哈希值即可），可以排除通过修改这些文件来作弊的嫌疑。*
 
@@ -313,7 +189,7 @@ bca6c849fe85adea595add66f12dc6285a6404b1451c336669089201a3107c84
 
 游戏程序本体:
 (v4.2)
-ec29357be31c579fa9cf70a188c7bf44ca035fec1b14da71e83450b99f8bde1f
+b5915d6b19b17529e03f96f6c5cb9269764669a83096178c9d5f455e8f96fbe1
 ```
 
 ### 5. 隐私保护说明
@@ -324,9 +200,149 @@ ec29357be31c579fa9cf70a188c7bf44ca035fec1b14da71e83450b99f8bde1f
 
 ### 6. 开源与修改说明
 
-基于LGPL-v3协议，您可自由修改、分发游戏代码，但非官方认证的版本生成的报告将默认不被社区认可。若您发布修改后的衍生版本，建议在说明中明确标注与官方版本的差异，以保障社区信息透明。您可以联系IQ Online Studio，为您的分支/衍生申请认证。
+基于LGPL-v3协议，您可自由修改、分发游戏代码，但非官方认证的版本生成的报告将默认不被社区认可。若您发布修改后的衍生版本，建议在说明中明确标注与官方版本的差异，以保障社区信息透明。您可以联系IQ Online Studio，为您的分支/衍生申请认证，认证后您的程序将进入`游戏使用的文件及其哈希SHA-256校验值正常值记录`。
 
 我们相信，通过透明的验证机制与社区共同监督，能让2D's 3D Game成为更公平、更有趣的游戏社区。
 
+### 附：2D's 3D Game的分支/衍生版本认证标准（暂行）
+
+1. 必须符合[GNU Lesser General Public License v3](LICENSE)要求。
+2. 通关的判定算法、移动算法必须完全符合玩法说明中的描述。
+3. 禁止以任何方式，在项目中留取以通过任何手段修改游戏时变量的代码，包括但不仅限于作弊键、作弊码、预留内存地址等。
+4. 游玩过程中，程序中的移动操作，必须完全符合玩家的原始输入，不得以任何方式篡改；玩法说明中描述的特殊移动方法除外。
+5. 生成通关报告时，必须确保报告中的每一项内容都是玩家游玩时的原始输入和原始数据，或玩家游玩时的设备的原始硬件和软件信息，不得以任何方式篡改，不得在程序中预写假数据。
+6. 本认证标准目前为暂行标准，随时可能更改，以最新的版本为准，不承认旧版本。
+7. 对此认证标准的最终解释权归IQ Online Studio所有。
+
 > （注：文档部分内容可能由 AI 生成）
-有事没事请加QQ群：743278470，你可以添加句子，报告错误，寻求帮助
+> 有事没事请加QQ群：743278470，你可以添加句子，报告错误，寻求帮助
+
+`License.txt of 7-Zip`
+
+```
+  7-Zip Extra
+  ~~~~~~~~~~~
+  License for use and distribution
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Copyright (C) 1999-2024 Igor Pavlov.
+
+  7-Zip Copyright (C) 1999-2024 Igor Pavlov.
+
+  The licenses for files are:
+
+    - 7za.exe:
+         - The "GNU LGPL" as main license for most of the code
+         - The "BSD 3-clause License" for some code
+         - The "BSD 2-clause License" for some code
+    - All other files: the "GNU LGPL".
+
+  Redistributions in binary form must reproduce related license information from this file.
+
+  Note: 
+        You can use 7-Zip Extra on any computer, including a computer in a commercial 
+        organization. You don't need to register or pay for 7-Zip.
+
+  It is allowed to digitally sign DLL and EXE files included into this package
+  with arbitrary signatures of third parties.
+
+
+GNU LGPL information
+--------------------
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You can receive a copy of the GNU Lesser General Public License from
+    http://www.gnu.org/
+
+
+
+BSD 3-clause License in 7-Zip code
+----------------------------------
+
+  The "BSD 3-clause License" is used for the following code in 7za.exe
+    -  ZSTD data decompression.
+       that code was developed using original zstd decoder code as reference code.
+       The original zstd decoder code was developed by Facebook Inc,
+       that also uses the "BSD 3-clause License".
+
+  Copyright (c) Facebook, Inc. All rights reserved.
+  Copyright (c) 2023-2024 Igor Pavlov.
+
+Text of the "BSD 3-clause License"
+----------------------------------
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may
+   be used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+---
+
+
+
+
+BSD 2-clause License in 7-Zip code
+----------------------------------
+
+  The "BSD 2-clause License" is used for the XXH64 code in 7za.exe.
+
+  XXH64 code in 7-Zip was derived from the original XXH64 code developed by Yann Collet.
+
+  Copyright (c) 2012-2021 Yann Collet.
+  Copyright (c) 2023-2024 Igor Pavlov.
+
+Text of the "BSD 2-clause License"
+----------------------------------
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+---
+```

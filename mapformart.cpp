@@ -127,14 +127,21 @@ int main()
 				if(f==0 or f==m+1 or s==0 or s==n+1)
 					a[f][s]=-1;//四周环绕-1
 	}
-	cout<<"输入简介(输入:\n_end\n(单行)以结束):\n";
+	cout<<"输入地图的话(输入:\n_end\n(单行)以结束):\n";
 	i_input
 	string mapswords="",tptp;
-	getline(cin,tptp);
-	while(tptp!="_end")
+	while(1)
 	{
 		getline(cin,tptp);
+		if(tptp=="_end")
+		{
+			break;
+		}
 		mapswords+=(tptp+"\n");
+	}
+	while(!mapswords.empty()&&mapswords.back()=='\n')
+	{
+		mapswords.pop_back();
 	}
 	cout<<"\n地图已经录入完毕,输入你地图的名字(不可含有空格,无需后缀名),完成导出:\n";
 	string _1=".\\map\\",_2,_3=mapPassed?".mapx":".map",__y11;
@@ -157,7 +164,7 @@ int main()
 			ddd++;
 			if(f<m)file1<<"\n";
 		}
-		file1<<"\n";
+//		file1<<"\n";
 	}
 	else
 	{
@@ -170,7 +177,7 @@ int main()
 			}file1<<a[f][n];
 			if(f<m)file1<<"\n";
 		}
-		file1<<"\n";
+//		file1<<"\n";
 	}
 	file1<<mapswords<<endl;
 	file1.close();

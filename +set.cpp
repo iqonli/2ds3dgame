@@ -30,13 +30,13 @@ void createID()
 	
 	ent
 	_color(10);
-	ptf("密钥生成成功, 输入文件名以保存");
+	ptf("密钥生成成功, 输入文件名以保存(无需后缀)");
 	_color();
 	ent
 	system("pause");
 	do{i_input cin>>fn;}while(regex_match(fn,regex("^\\s+$")));
 	
-	string fn1=fn+".txt";
+	string fn1=".\\user\\"+fn+".id";
 	ofstream outFile1(fn1);
 	
 	if (!outFile1) 
@@ -97,11 +97,10 @@ int main()
 					playerswords += line+"\n";
 				}
 			}
-			if(!playerswords.empty()&&playerswords.back()=='\n')
+			while(!playerswords.empty()&&playerswords.back()=='\n')
 			{
 				playerswords.pop_back();
 			}
-			playerswords+='\n';
 			
 			ofstream outFile1(".\\+set\\playerswords.txt");
 			
@@ -113,6 +112,7 @@ int main()
 			
 			outFile1<<playerswords;
 			outFile1.close();
+			cout<<"保存成功\n";
 		}
 	}
 	return 0;

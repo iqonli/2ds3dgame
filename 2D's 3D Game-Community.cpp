@@ -21,7 +21,7 @@ char z;//读入的键
 char W='w',A='a',S='s',D='d',Q='q',E='e',Z='z',C='c';//键位
 bool __E,__C,__A,__I,__T,__D,__X,_X,_GUI,_anyway,_hid,fr;//_X显示坐标
 string userIDPath,mapPath,playerswords,mapswords,originalMapOHash,raceDataPath,raceDataHash;
-bool mapPassed=false;
+bool mapPassed=false,disWMIC=false;
 string mapPasswd,mapPasswdHash;
 char _x1[100000]=".\\map\\",_x2[100000];
 char _xx1[100000]=".\\user\\",_xx2[100000];
@@ -73,7 +73,7 @@ string getCurrentTimeString(bool _ms=true)
 	tm* localTime = localtime(&now);
 	
 	ostringstream oss;
-	oss << put_time(localTime,"%Y/%m/%d %H:%M:%S");
+	oss << put_time(localTime,"%Y-%m-%d %H:%M:%S");
 	if(_ms)
 	{
 		auto now = chrono::system_clock::now();
@@ -976,7 +976,7 @@ string getOMap()
 	}
 	return t1;
 }
-string hachinsh(string has,int aa,int ss,int ee)
+string subhash(string has,int aa,int ss,int ee)
 {
 	//aa=0 前后 aa=1 前 aa=2 后
 	if(aa==0)
@@ -988,10 +988,10 @@ string hachinsh(string has,int aa,int ss,int ee)
 }
 string userHash(int t=0)
 {
-	//t=0 原 t=1 hachinsh
+	//t=0 原 t=1 subhash
 	string a=PD_hash(userIDPath,true);
 	if(t==0)return a;
-	string b=hachinsh(a,1,8,0);
+	string b=subhash(a,1,8,0);
 	if(t==1)return b;
 }
 string mapOHash(int t=0)
@@ -1020,6 +1020,7 @@ string winReport()
 	string t0="";
 	t0=nameee+" "+verrr+"通关报告\n"
 	+getCurrentTimeString()+"\n"
+	+(disWMIC?"本报告文件不含WMIC信息。\n":"")
 	+"地图原文件SHA-256:"+mapOHash()+"\n地图纯码:"+mapOHash(1)
 	+"\n--游戏按键--\n↑ "+W+"  ↓ "+S+"  ← "+A+"  → "+D+"\n↖ "+Q+"  ↗ "+E+"  ↙ "+Z+"  ↘ "+C+"\n最终步数:"+to_string(steps)+"	作弊次数:"+to_string(_d)+"\n游戏时全部输入:"+winRoad+"\n游戏时有效输入:"+winRoadA
 	+"\n开始Unix时间:"+to_string(unixunix0)+"\n结束Unix时间:"+to_string(unixunix1)+"\n用时:"+to_string(msms0)+"s\nID hash SHA-256:"+userHash()+"\n计算机名:"+getComName()
@@ -1154,10 +1155,10 @@ string packRaceData()
 	//info
 	{
 		_color(11);
-		cout<<"\n\\info\\保存中, 该部分时间较长, 请等待...\n";
+		cout<<"\n\\info\\保存中...\n";
 		_color();
-		//tasklistV/M
-		system(("tasklist /V > ."+randomPath+"\\"+"info\\tasklistV.txt").c_str());
+		//tasklist non/M
+		system(("tasklist > ."+randomPath+"\\"+"info\\tasklist.txt").c_str());
 		system(("tasklist /M > ."+randomPath+"\\"+"info\\tasklistM.txt").c_str());
 		//游戏目录文件 gameFolderFileList
 		system(("tree .\\ /f > ."+randomPath+"\\"+"info\\gameFolderFileList.txt").c_str());
@@ -1180,20 +1181,59 @@ string packRaceData()
 		114514;
 		//系统配置
 		system(("systeminfo > ."+randomPath+"\\"+"info\\systeminfo.txt").c_str());
-		system(("wmic cpu get * > ."+randomPath+"\\"+"info\\wmicCPU.txt").c_str());
-		system(("wmic memorychip get * > ."+randomPath+"\\"+"info\\wmicMEM.txt").c_str());
-		system(("wmic diskdrive get * > ."+randomPath+"\\"+"info\\wmicDISK.txt").c_str());
-		system(("wmic gpu get * > ."+randomPath+"\\"+"info\\wmicGPU.txt").c_str());
-		system(("wmic baseboard get * > ."+randomPath+"\\"+"info\\wmicMB.txt").c_str());
-		system(("wmic os get * > ."+randomPath+"\\"+"info\\wmicOS.txt").c_str());
-		system(("wmic bios get * > ."+randomPath+"\\"+"info\\wmicBIOS.txt").c_str());
+		
+		if(!disWMIC)
+		{
+			_color(11);
+			cout<<"\n	\\info\\wmicCPU.txt保存中...\n";
+			_color();
+			system(("wmic cpu get * > ."+randomPath+"\\"+"info\\wmicCPU.txt").c_str());
+			
+			_color(11);
+			cout<<"\n	\\info\\wmicMEM.txt保存中...\n";
+			_color();
+			system(("wmic memorychip get * > ."+randomPath+"\\"+"info\\wmicMEM.txt").c_str());
+			
+			_color(11);
+			cout<<"\n	\\info\\wmicDISK.txt保存中...\n";
+			_color();
+			system(("wmic diskdrive get * > ."+randomPath+"\\"+"info\\wmicDISK.txt").c_str());
+			
+			_color(11);
+			cout<<"\n	\\info\\wmicGPU.txt保存中...\n";
+			_color();
+			system(("wmic gpu get * > ."+randomPath+"\\"+"info\\wmicGPU.txt").c_str());
+			
+			_color(11);
+			cout<<"\n	\\info\\wmicMB.txt保存中...\n";
+			_color();
+			system(("wmic baseboard get * > ."+randomPath+"\\"+"info\\wmicMB.txt").c_str());
+			
+			_color(11);
+			cout<<"\n	\\info\\wmicOS.txt保存中...\n";
+			_color();
+			system(("wmic os get * > ."+randomPath+"\\"+"info\\wmicOS.txt").c_str());
+			
+			_color(11);
+			cout<<"\n	\\info\\wmicBIOS.txt保存中...\n";
+			_color();
+			system(("wmic bios get * > ."+randomPath+"\\"+"info\\wmicBIOS.txt").c_str());
+		}
+		
 		system(("ipconfig /all > ."+randomPath+"\\"+"info\\ipconfig.txt").c_str());
 	}
-	string reportZipName="2ds3dgame-"+hachinsh(mapOHash(1),1,8,0)+"-"+getCurrentTimeString4Report()+"-"+to_string(randomNum);//没有.zip
+	string reportZipName="2ds3dgame-"+subhash(mapOHash(1),1,8,0)+"-"+getCurrentTimeString4Report()+"-"+to_string(randomNum);//没有.zip
+	if(disWMIC)
+	{
+		reportZipName=reportZipName+"-NonWMIC";
+	}
 	string sevenZcommand="7za.exe a -tzip -mx=9 \".\\report\\"+reportZipName+".zip\" \"."+randomPath+"\\*\"";
 	_color(11);
-	cout<<"\n7-zip压缩中...\n";
-	_color();
+	cout<<"\n即 7-zip压缩中...\n";
+	cout<<"将 7-zip压缩中...\n";
+	cout<<"成 7-zip压缩中...\n";
+	cout<<"功 7-zip压缩中...\n";
+	_color(6);
 	system(sevenZcommand.c_str());
 	_color(11);
 	cout<<"\n临时文件删除中...\n";
@@ -1577,7 +1617,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			{
 				while(1)
 				{
-					ptf("\n地图已加密, 输入密码,一行,禁止空格。\n");
+					ptf("\n地图已加密,输入密码,一行,禁止空格。\n");
 					i_input
 					cin>>mapPasswd;
 					_color(48);
@@ -1712,6 +1752,14 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 				continue;
 			}
 			break;
+		}
+		cout<<"\n是否禁用通关报告中的WMIC信息输出?如果禁用,可以保护个人隐私,但是可能会失去一些报告的可信度:日常练习建议禁用,竞赛冲榜建议启用。0禁用, 1启用.";
+		char x;
+		i_input
+		cin>>x;
+		if(x=='0')
+		{
+			disWMIC=true;
 		}
 		
 		otpt();
@@ -2341,7 +2389,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 		cout<<"地图纯码:	"<<mapOHash(1)<<endl;
 		stringstream ss;
 		ss<<fixed<<setprecision(3)<<msms;
-		windTitle(ss.str()+"s | "+to_string(steps)+"steps | "+to_string(i_tx())+" "+tx_text(i_tx())+" "+tx_get()+" | id="+userHash(1)+" | map="+hachinsh(mapOHash(1),1,8,0)+" | "+getCurrentTimeString()+" | "+nameee+" "+verrr);
+		windTitle(ss.str()+"s | "+to_string(steps)+"steps | "+to_string(i_tx())+" "+tx_text(i_tx())+" "+tx_get()+" | id="+userHash(1)+" | map="+subhash(mapOHash(1),1,8,0)+" | "+getCurrentTimeString()+" | "+nameee+" "+verrr);
 		if(DIE())
 		{
 			ent
@@ -2458,7 +2506,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			x++,y++,steps++;
 			winRoadA=winRoadA+z;
 		}
-		windTitle(ss.str()+"s | "+to_string(steps)+"steps | "+to_string(i_tx())+" "+tx_text(i_tx())+" "+tx_get()+" | id="+userHash(1)+" | map="+hachinsh(mapOHash(1),1,8,0)+" | "+getCurrentTimeString()+" | "+nameee+" "+verrr);
+		windTitle(ss.str()+"s | "+to_string(steps)+"steps | "+to_string(i_tx())+" "+tx_text(i_tx())+" "+tx_get()+" | id="+userHash(1)+" | map="+subhash(mapOHash(1),1,8,0)+" | "+getCurrentTimeString()+" | "+nameee+" "+verrr);
 	}
 	system("cls");
 	_color(207);
@@ -2496,7 +2544,9 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 	_color(10);
 	ptf("\n");
 	raceDataHash=PD_hash(raceDataPath,true);
-	cout<<"\n通关报告SHA-256:"<<raceDataHash<<endl;
+	cout<<"\n通关报告SHA-256:";
+	_color(160);
+	cout<<raceDataHash<<endl;
 	_color();
 	system("pause");
 	system("pause");

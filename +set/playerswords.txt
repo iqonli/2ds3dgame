@@ -1,3 +1,2 @@
-2D's 3D Game by IQ Online Studio
-智商在线工作室
-默认玩家的话
+2D's 3D Game by IQ Online Studio, github.com/iqonli/2ds3dgame
+这里是默认的玩家的话，因为玩家没有说任何话。
