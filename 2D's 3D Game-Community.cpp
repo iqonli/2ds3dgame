@@ -23,6 +23,7 @@ bool __E,__C,__A,__I,__T,__D,__X,_X,_GUI,_anyway,_hid,fr;//_X显示坐标
 string userIDPath,mapPath,playerswords,mapswords,originalMapOHash,raceDataPath,raceDataHash;
 bool mapPassed=false,disWMIC=false;
 string mapPasswd,mapPasswdHash;
+int beststep;
 char _x1[100000]=".\\map\\",_x2[100000];
 char _xx1[100000]=".\\user\\",_xx2[100000];
 long long unixunix0,unixunix1;
@@ -33,7 +34,7 @@ streambuf* originalCinBuffer=cin.rdbuf();
 string tptp;
 string ttemp;
 string winRoadA="",winRoad="";//有效winRoadA, 原始winRoad
-string nameee="2D's 3D Game Plus",verrr="4.2(Community)";
+string nameee="2D's 3D Game Plus",verrr="4.3(Community)";
 
 //0 RACE
 //1 RACE-DARK
@@ -1022,7 +1023,9 @@ string winReport()
 	+getCurrentTimeString()+"\n"
 	+(disWMIC?"本报告文件不含WMIC信息。\n":"")
 	+"地图原文件SHA-256:"+mapOHash()+"\n地图纯码:"+mapOHash(1)
-	+"\n--游戏按键--\n↑ "+W+"  ↓ "+S+"  ← "+A+"  → "+D+"\n↖ "+Q+"  ↗ "+E+"  ↙ "+Z+"  ↘ "+C+"\n最终步数:"+to_string(steps)+"	作弊次数:"+to_string(_d)+"\n游戏时全部输入:"+winRoad+"\n游戏时有效输入:"+winRoadA
+	+"\n--游戏按键--\n↑ "+W+"  ↓ "+S+"  ← "+A+"  → "+D+"\n↖ "+Q+"  ↗ "+E+"  ↙ "+Z+"  ↘ "+C+"\n最终步数:"+to_string(steps)
+	+(steps==beststep?"(步数为最优解)":"")
+	+"	作弊次数:"+to_string(_d)+"\n游戏时全部输入:"+winRoad+"\n游戏时有效输入:"+winRoadA
 	+"\n开始Unix时间:"+to_string(unixunix0)+"\n结束Unix时间:"+to_string(unixunix1)+"\n用时:"+to_string(msms0)+"s\nID hash SHA-256:"+userHash()+"\n计算机名:"+getComName()
 	+"\n出生位置:"+to_string(birx1)+"行 "+to_string(biry1)+"列"+"\n结束位置:"+to_string(_finx())+"行 "+to_string(_finy())+"列"
 	+"\n特性变量:"+tx_get(1)+"\n特性:"+to_string(i_tx())+" "+tx_text(i_tx())+" "+tx_get()+"\n"
@@ -1044,7 +1047,8 @@ int outFile4packData(string result,string fileName,string tempPath="",bool print
 		cerr<<"无法保存"<<filePath<<endl;
 	}
 	_f<<result;
-	_f.close();
+//	_f.close();
+	//不关闭防止修改信息
 	if(printt)
 	{
 		_color(48);
@@ -1057,11 +1061,83 @@ int outFile4packData(string result,string fileName,string tempPath="",bool print
 	
 	return 0;
 }
+
+// 执行CMD命令并捕获输出到string
+string execCmd(const string& cmd)
+{
+	char buffer[128];
+	string result = "";
+	// 执行命令并读取输出
+	FILE* pipe = _popen(cmd.c_str(), "r");
+	if (!pipe)
+	{
+		return cmd+"执行失败";
+	}
+	while (fgets(buffer, sizeof(buffer), pipe) != nullptr)
+	{
+		result += buffer;
+	}
+	_pclose(pipe);
+	
+	// 去除开头的多个空行
+	size_t start = result.find_first_not_of("\r\n");
+	if (start != string::npos)
+	{
+		result = result.substr(start);
+	}
+	else
+	{
+		// 如果全是空行，返回空字符串
+		result = "";
+	}
+	
+	return result;
+}
+
 string packRaceData()
 {
 	//cmd调用路径: "."+randomPath+"\\"+fileName
 	int randomNum=PD_random(100000,999999);
 	string randomPath="\\$temp\\"+to_string(randomNum);
+	
+	_color(11);
+	cout<<"\n	\\info\\tasklist.txt保存中...\n";
+	string tasklistOutput = execCmd("tasklist");
+	cout<<"\n	\\info\\tasklistM.txt保存中...\n";
+	string tasklistMOutput = execCmd("tasklist /M");
+	string treeOutput = execCmd("tree .\\ /f");
+	string EXEpath=getEXEPath();
+	string exehash=PD_hash(EXEpath,true);
+	string EXEpathO=getEXEPathO();
+	string sevenZadll=PD_hash(EXEpathO+"\\"+"7za.dll",true);
+	string sevenZaexe=PD_hash(EXEpathO+"\\"+"7za.exe",true);
+	string sevenZxadll=PD_hash(EXEpathO+"\\"+"7zxa.dll",true);
+	cout<<"\n	\\info\\systeminfo.txt保存中...\n";
+	string systeminfoOutput = execCmd("systeminfo");
+	string ipconfigOutput = execCmd("ipconfig /all");
+	_color();
+	
+	string wmicCPUOutput,wmicMEMOutput,wmicDISKOutput,wmicGPUOutput,wmicMBOutput,wmicOSOutput,wmicBIOSOutput;
+	if(!disWMIC)
+	{
+		_color(11);
+		cout<<"\n	\\info\\wmicCPU.txt保存中...\n";
+		wmicCPUOutput = execCmd("wmic cpu get *");
+		cout<<"\n	\\info\\wmicMEM.txt保存中...\n";
+		wmicMEMOutput = execCmd("wmic memorychip get *");
+		cout<<"\n	\\info\\wmicDISK.txt保存中...\n";
+		wmicDISKOutput = execCmd("wmic diskdrive get *");
+		cout<<"\n	\\info\\wmicGPU.txt保存中...\n";
+		wmicGPUOutput = execCmd("wmic gpu get *");
+		cout<<"\n	\\info\\wmicMB.txt保存中...\n";
+		wmicMBOutput = execCmd("wmic baseboard get *");
+		cout<<"\n	\\info\\wmicOS.txt保存中...\n";
+		wmicOSOutput = execCmd("wmic os get *");
+		cout<<"\n	\\info\\wmicBIOS.txt保存中...\n";
+		wmicBIOSOutput = execCmd("wmic bios get *");
+		_color();
+	}
+	
 	system(("mkdir \"."+randomPath+"\\readme\"").c_str());
 	system(("mkdir \"."+randomPath+"\\player\"").c_str());
 	system(("mkdir \"."+randomPath+"\\result\"").c_str());
@@ -1157,70 +1233,44 @@ string packRaceData()
 		_color(11);
 		cout<<"\n\\info\\保存中...\n";
 		_color();
-		//tasklist non/M
-		system(("tasklist > ."+randomPath+"\\"+"info\\tasklist.txt").c_str());
-		system(("tasklist /M > ."+randomPath+"\\"+"info\\tasklistM.txt").c_str());
+		//tasklist non/M - 先捕获输出再写入
+		outFile4packData(tasklistOutput, "info\\tasklist.txt", randomPath);
+		outFile4packData(tasklistMOutput, "info\\tasklistM.txt", randomPath);
+		
 		//游戏目录文件 gameFolderFileList
-		system(("tree .\\ /f > ."+randomPath+"\\"+"info\\gameFolderFileList.txt").c_str());
+		outFile4packData(treeOutput, "info\\gameFolderFileList.txt", randomPath);
+		
 		//剪贴板
 		114514;
+		
 		//本程序路径、hash
-		string EXEpath=getEXEPath();
 		outFile4packData(EXEpath,"info\\gamepath.txt",randomPath);
-		string exehash=PD_hash(EXEpath,true);
 		outFile4packData(exehash,"info\\gamehash.txt",randomPath);
+		
 		//7z路径、hash
-		string EXEpathO=getEXEPathO();
-		string sevenZadll=PD_hash(EXEpathO+"\\"+"7za.dll",true);
 		outFile4packData(sevenZadll,"info\\7za.dll-hash.txt",randomPath);
-		string sevenZaexe=PD_hash(EXEpathO+"\\"+"7za.exe",true);
 		outFile4packData(sevenZaexe,"info\\7za.exe-hash.txt",randomPath);
-		string sevenZxadll=PD_hash(EXEpathO+"\\"+"7zxa.dll",true);
 		outFile4packData(sevenZxadll,"info\\7zxa.dll-hash.txt",randomPath);
+		
 		//screen size hz
 		114514;
-		//系统配置
-		system(("systeminfo > ."+randomPath+"\\"+"info\\systeminfo.txt").c_str());
+		
+		//系统配置 - 先捕获输出再写入
+		outFile4packData(systeminfoOutput, "info\\systeminfo.txt", randomPath);
 		
 		if(!disWMIC)
 		{
-			_color(11);
-			cout<<"\n	\\info\\wmicCPU.txt保存中...\n";
-			_color();
-			system(("wmic cpu get * > ."+randomPath+"\\"+"info\\wmicCPU.txt").c_str());
-			
-			_color(11);
-			cout<<"\n	\\info\\wmicMEM.txt保存中...\n";
-			_color();
-			system(("wmic memorychip get * > ."+randomPath+"\\"+"info\\wmicMEM.txt").c_str());
-			
-			_color(11);
-			cout<<"\n	\\info\\wmicDISK.txt保存中...\n";
-			_color();
-			system(("wmic diskdrive get * > ."+randomPath+"\\"+"info\\wmicDISK.txt").c_str());
-			
-			_color(11);
-			cout<<"\n	\\info\\wmicGPU.txt保存中...\n";
-			_color();
-			system(("wmic gpu get * > ."+randomPath+"\\"+"info\\wmicGPU.txt").c_str());
-			
-			_color(11);
-			cout<<"\n	\\info\\wmicMB.txt保存中...\n";
-			_color();
-			system(("wmic baseboard get * > ."+randomPath+"\\"+"info\\wmicMB.txt").c_str());
-			
-			_color(11);
-			cout<<"\n	\\info\\wmicOS.txt保存中...\n";
-			_color();
-			system(("wmic os get * > ."+randomPath+"\\"+"info\\wmicOS.txt").c_str());
-			
-			_color(11);
-			cout<<"\n	\\info\\wmicBIOS.txt保存中...\n";
-			_color();
-			system(("wmic bios get * > ."+randomPath+"\\"+"info\\wmicBIOS.txt").c_str());
+			outFile4packData(wmicCPUOutput, "info\\wmicCPU.txt", randomPath);
+			outFile4packData(wmicMEMOutput, "info\\wmicMEM.txt", randomPath);
+			outFile4packData(wmicDISKOutput, "info\\wmicDISK.txt", randomPath);
+			outFile4packData(wmicGPUOutput, "info\\wmicGPU.txt", randomPath);
+			outFile4packData(wmicMBOutput, "info\\wmicMB.txt", randomPath);
+			outFile4packData(wmicOSOutput, "info\\wmicOS.txt", randomPath);
+			outFile4packData(wmicBIOSOutput, "info\\wmicBIOS.txt", randomPath);
 		}
 		
-		system(("ipconfig /all > ."+randomPath+"\\"+"info\\ipconfig.txt").c_str());
+		//ipconfig信息 - 先捕获输出再写入
+		outFile4packData(ipconfigOutput, "info\\ipconfig.txt", randomPath);
 	}
 	string reportZipName="2ds3dgame-"+subhash(mapOHash(1),1,8,0)+"-"+getCurrentTimeString4Report()+"-"+to_string(randomNum);//没有.zip
 	if(disWMIC)
@@ -1373,6 +1423,12 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 		if(m==-1 and n==-1)
 		{
 			chooseMap();
+			goto four2;
+		}
+		if(m==-1 and n==-1)
+		{
+			ptf("该部分已删除。\n");
+			system("pause");
 			goto four2;
 		}
 		if(m<1 or n<1)
@@ -1749,6 +1805,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			{
 				ptf("禁止定义按键为`。");ent
 				system("pause");
+				W='w',S='s',A='a',D='d',Q='q',E='e',Z='z',C='c';
 				continue;
 			}
 			break;
@@ -1783,7 +1840,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 				cout<<gui_text();
 				_color();
 			}
-			ptf("\n--游戏按键--\n↑ %c  ↓ %c  ← %c  → %c\n↖ %c  ↗ %c  ↙ %c  ↘ %c\n\n在操作前输入英文感叹号!可以强制移动,但禁止移动到边界外。\n输入两个英文感叹号!!锁定强制移动模式,再输入!!退出。\n输入英文问号?可以标记出所有不可能到达地点。\n输入`可以按照最优解前进一步,输入!`获得最优解。\n输入~隐藏/显示提示文字。\n0重玩(回到出生点),1选择玩家颜色,2存档读档,3按键设置,4开关多彩模式、瞎子模式和桂哥模式,5开关显示可到达地点,6显示坐标,7直接传送,8修改方块,9还原地图。\n特性:%s	当前步数:%d	最优解步数:%d	多彩模式:%s	显示可到达地点:%s	显示不可到达地点:%s	桂哥模式:%s	强制移动:%s	作弊次数:%d",W,S,A,D,Q,E,Z,C,tx_get(),steps,strlen(_findOptimalPath(x,y,_finx(),_finy()).c_str()),__C?"On":"Off",__A?"On":"Off",__I?"On":"Off",_GUI?"On":"Off",_anyway?"On":"Off",_d);
+			ptf("\n--游戏按键--\n↑ %c  ↓ %c  ← %c  → %c\n↖ %c  ↗ %c  ↙ %c  ↘ %c\n\n!+想要的操作=强制移动,禁止移动到边界外。\n!!=锁定/退出强制移动。\n?=标记所有不可能到达地点。\n`=按最优解前进一步;!`=获取最优解。\n~=隐藏/显示提示文字。\n0重玩(回到出生点),1选择玩家颜色,2存档读档,3按键设置,4多彩/瞎子/桂哥,5开关显示可到达地点,6显示坐标,7直接传送,8修改方块,9还原地图。\n特性:%s	当前步数:%d	最优解步数:%d	多彩模式:%s	显示可到达地点:%s	显示不可到达地点:%s	桂哥模式:%s	强制移动:%s	作弊次数:%d",W,S,A,D,Q,E,Z,C,tx_get().c_str(),steps,_findOptimalPath(x,y,_finx(),_finy()).size(),__C?"On":"Off",__A?"On":"Off",__I?"On":"Off",_GUI?"On":"Off",_anyway?"On":"Off",_d);
 		}
 		ent
 		if(_X)
@@ -2215,6 +2272,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			{
 				ptf("禁止定义按键为数字键或!?~`。");ent
 				system("pause");
+				W='w',S='s',A='a',D='d',Q='q',E='e',Z='z',C='c';
 				continue;
 			}
 			if(W==A or W==S or W==D or W==Q or W==E or W==Z or W==C or A==S or A==D or A==Q or A==E or A==Z or A==C or S==D or S==Q or S==E or S==Z or S==C or D==Q or D==E or D==Z or D==C or Q==E or Q==Z or Q==C or E==Z or E==C or Z==C)
@@ -2357,7 +2415,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 	auto race_start=chrono::high_resolution_clock::now();
 	msms0;
 	unixunix0=chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
-	int beststep=strlen(_findOptimalPath(x,y,_finx(),_finy()).c_str());
+	beststep=strlen(_findOptimalPath(x,y,_finx(),_finy()).c_str());
 	while(!isWin())
 	{
 		if(originalMapOHash!=mapOHash(1))
