@@ -21,11 +21,13 @@ char z;//读入的键
 char W='w',A='a',S='s',D='d',Q='q',E='e',Z='z',C='c';//键位
 bool __E,__C,__A,__I,__T,__D,__X,_X,_GUI,_anyway,_hid,fr;//_X显示坐标
 string userIDPath,mapPath,playerswords,mapswords,originalMapOHash,raceDataPath,raceDataHash;
-bool mapPassed=false,disWMIC=false;
+bool mapPassed=false,disWMIC=false,raceREC=false;
+double recGOAL,recPB;
 string mapPasswd,mapPasswdHash;
 int beststep;
-char _x1[100000]=".\\map\\",_x2[100000];
-char _xx1[100000]=".\\user\\",_xx2[100000];
+bool idLoaded=false,mapLoaded=false;
+string mapF=".\\map\\",mapL;//front & location
+string userF=".\\user\\",userL;
 long long unixunix0,unixunix1;
 double msms,msms0;
 ifstream finnn;
@@ -34,7 +36,7 @@ streambuf* originalCinBuffer=cin.rdbuf();
 string tptp;
 string ttemp;
 string winRoadA="",winRoad="";//有效winRoadA, 原始winRoad
-string nameee="2D's 3D Game Plus",verrr="4.3(Community)";
+string nameee="2D's 3D Game Plus",verrr="4.4(Community)";
 
 //0 RACE
 //1 RACE-DARK
@@ -183,6 +185,108 @@ string gui_text()//桂哥文本
 	if(random_num==3)return "666有嘿壳";
 	if(random_num==4)return "666开没开自己心里清楚";
 	return "666这个入是桂";
+}
+void raceRECDisplayText(double timing)//冲榜文本
+{
+	int RED=10,BLUE=8,GREEN=11;
+	STR Red[RED],Blue[BLUE],Green[GREEN];
+	Red[0].str="菜，就多练！";
+	Red[1].str="哥们不行啊。";
+	Red[2].str="压力！！！";
+	Red[3].str="菜狗，还敢设这么高目标？";
+	Red[4].str="受着！";
+	Red[5].str="你对得起自己的PB吗？";
+	Red[6].str="杨伟？";
+	Red[7].str="小丑。";
+	Red[8].str="乐子。";
+	Red[9].str="人机。";
+	
+	Blue[0].str="今晚不睡觉也得冲榜！";
+	Blue[1].str="可以兄弟。";
+	Blue[2].str="别放水啊！";
+	Blue[3].str="再来一把！";
+	Blue[4].str="最后一把了。";
+	Blue[5].str="兄弟别怂！";
+	Blue[6].str="这是在学牙膏厂？";
+	Blue[7].str="有点搞，，";
+	
+	Green[0].str="颗秒！！！";
+	Green[1].str="什么实力！！！";
+	Green[2].str="说话！！！";
+	Green[3].str="权威！！！";
+	Green[4].str="打压！！！";
+	Green[5].str="我说没开就是没开！";
+	Green[6].str="忘关了。";
+	Green[7].str="时间管理这一块.\\";
+	Green[8].str="神威难藏泪";
+	Green[9].str="这么强！？";
+	Green[10].str="？！强强！？";
+	//Red 比PB慢
+	if(timing>=recPB)
+	{
+		_color(94);
+		cout<<Red[PD_random(0,RED-1)].str;
+		_color(5);
+		ent ptf("[FAILED]");ent
+		_color(6);
+		cout<<"\nGoal:	"<<recGOAL;
+		_color();
+		cout<<"\nPB:	"<<recPB; _color(12);cout<<" | Goal+"<<recPB-recGOAL;
+		_color(5);
+		cout<<"\nThis:	"<<timing; _color(12);cout<<" | Goal+"<<timing-recGOAL;
+	}
+	//Blue 比PB快，比Goal慢
+	else if(timing>recGOAL)
+	{
+		_color(159);
+		cout<<Blue[PD_random(0,BLUE-1)].str;
+		_color(9);
+		ent ptf("[NEW PB]");ent
+		_color(6);
+		cout<<"\nGoal:	"<<recGOAL;
+		_color(9);
+		cout<<"\nThis:	"<<timing; _color(12);cout<<" | Goal+"<<timing-recGOAL;
+		_color();
+		cout<<"\nPB:	"<<recPB; _color(12);cout<<" | Goal+"<<recPB-recGOAL;
+	}
+	//Green 比Goal快
+	else
+	{
+		_color(175);
+		cout<<Green[PD_random(0,GREEN-1)].str;
+		_color(10);
+		ent ptf("[OVER GOAL]");ent
+		_color(10);
+		cout<<"\nThis:	"<<timing; _color(10);cout<<" | Goal-"<<recGOAL-timing;
+		_color(6);
+		cout<<"\nGoal:	"<<recGOAL;
+		_color();
+		cout<<"\nPB:	"<<recPB; _color(12);cout<<" | Goal+"<<recPB-recGOAL;
+	}
+	ent
+	int ___x;
+	if(timing<recPB and timing>recGOAL)//Blue
+	{
+		cout<<"更新 PB["<<recPB<<"] > ["<<timing<<"]?1 yes, 0 no."<<endl;
+		i_input
+		cin>>___x;
+		if(___x==1)
+		{
+			recPB=timing;
+		}
+	}
+	else if(timing<recGOAL)//Green
+	{
+		cout<<"更新 PB["<<recPB<<"] 与 Goal["<<recGOAL<<"] > ["<<timing<<"]?1 yes, 0 no."<<endl;
+		i_input
+		cin>>___x;
+		if(___x==1)
+		{
+			recGOAL=recPB=timing;
+		}
+	}
+	_color();
+	return;
 }
 void set_birth()//设置出生点
 {
@@ -1037,6 +1141,38 @@ string winReport()
 	+"\n7zxa.dll hash SHA-256:"+sevenZxadll;
 	return t0;
 }
+string winReportLite()
+{
+	//本程序路径、hash
+	string EXEpath=getEXEPath();
+	string exehash=PD_hash(EXEpath,true);
+	//7z路径、hash
+	string EXEpathO=getEXEPathO();
+	string sevenZadll=PD_hash(EXEpathO+"\\"+"7za.dll",true);
+	string sevenZaexe=PD_hash(EXEpathO+"\\"+"7za.exe",true);
+	string sevenZxadll=PD_hash(EXEpathO+"\\"+"7zxa.dll",true);
+	
+	string t0="";
+	t0=verrr
+	+"\n"+getCurrentTimeString()
+	+"\n"+userHash()
+	+"\n"+mapOHash(1)
+	+"\n"+to_string(msms0)
+	+"\n"+to_string(birx1)+" "+to_string(biry1)
+	+"\n"+to_string(_finx())+" "+to_string(_finy())
+	+"\n"+to_string(steps)
+	+"\n"+tx_get()
+	+"\n"+to_string(i_tx())+" "+tx_text(i_tx())+" "+tx_get()
+	+"\n"+to_string(_d)
+	+"\n"+to_string(unixunix0)
+	+"\n"+to_string(unixunix1)
+	+"\n"+getComName()
+	+"\n"+winRoad
+	+"\n"+winRoadA
+	+"\n"+"-"
+	+"\n"+"版本\n当前时间\nID hash SHA-256\n地图纯码\n用时\n出生位置\n结束位置\n最终步数\n特性变量\n特性text\n作弊次数\n开始Unix时间\n结束Unix时间\n计算机名\n游戏时全部输入\n游戏时有效输入";
+	return t0;
+}
 // tempPath 应为 "\\abc"
 int outFile4packData(string result,string fileName,string tempPath="",bool printt=true)
 {
@@ -1097,7 +1233,7 @@ string execCmd(const string& cmd)
 string packRaceData()
 {
 	//cmd调用路径: "."+randomPath+"\\"+fileName
-	int randomNum=PD_random(100000,999999);
+	int randomNum=PD_random(10000000,99999999);
 	string randomPath="\\$temp\\"+to_string(randomNum);
 	
 	_color(11);
@@ -1173,6 +1309,7 @@ string packRaceData()
 		cout<<"\n\\result\\保存中...\n";
 		_color();
 		outFile4packData(winReport(),"result\\result.txt",randomPath);
+		outFile4packData(winReportLite(),"result\\resultLite.txt",randomPath);
 	}
 	//map OK
 	{
@@ -1558,38 +1695,70 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			}
 			playerswordsin.close();
 		}
-		ptf("\n以下是本地的所有账号,输入文件名(包括后缀)以导入,多级目录用反斜杠\\表示。(输入错误后果自负)如果你想在游戏窗口复制内容,请先左键拖动选择,然后按回车复制;按右键粘贴;仅限于Windows 10/11。");ent
-		_color(48);
-		system("tree .\\user /f");
-		_color();
-//		system("dir .\\user /s /b");
-//		char _xx1[100000]=".\\user\\",_xx2[100000];
-		i_input
-		cin>>_xx2;
-		strcat(_xx1,_xx2);
-		userIDPath=_xx1;
-		if(isNonASCII(userIDPath))
+		while(!idLoaded)
 		{
-			_color(78);
-			cerr<<"错误: id文件包含非ASCII可见字符\a\n";
+			ptf("\n以下是本地的所有账号,输入文件名(包括后缀)以导入,多级目录用反斜杠\\表示。如果你想在游戏窗口复制内容,请先左键拖动选择,然后按回车复制;按右键粘贴;仅限于Windows 10/11。");ent
+			_color(48);
+			system("tree .\\user /f");
 			_color();
-			system("pause");
-			return 0;
+//			system("dir .\\user /s /b");
+//			char _xx1[100000]=".\\user\\",_xx2[100000];
+			i_input
+			cin>>userL;
+			userIDPath=userF+userL;
+			if(isNonASCII(userIDPath))
+			{
+				_color(78);
+				cerr<<"错误: id文件包含非ASCII可见字符\a\n";
+				_color();
+				system("pause");
+				return 0;
+			}
+			// 检查账号文件是否存在并可读
+			ifstream idFile(userIDPath);
+			if(idFile.is_open())
+			{
+				idFile.close();
+				_color(10);
+				cout<<"ID加载成功!\n"<<userHash();
+				_color();ent
+				idLoaded=true;
+			}
+			else
+			{
+				_color(78);
+				cerr<<"错误: 无法打开账号文件, 请重新输入\a\n";
+				_color();
+				system("pause");
+			}
 		}
-		cout<<"ID加载成功!\n"<<userHash()<<"\n";
-		ptf("\n以下是本地的所有地图,输入文件名(包括后缀)以导入,多级目录用反斜杠\\表示。(输入错误,或地图有问题后果自负)如果你想在游戏窗口复制内容,请先左键拖动选择,然后按回车复制;按右键粘贴;仅限于Windows 10/11。");ent
-		_color(48);
-		system("tree .\\map /f");
-		_color();
-//		system("dir .\\map /s /b");
-//		char _x1[100000]=".\\map\\",_x2[100000];
-		i_input
-		cin>>_x2;
-		strcat(_x1,_x2);
-		mapPath=_x1;
-		finnn.open(_x1);
-		cin.rdbuf(finnn.rdbuf()); // 将标准输入重定向到文件流
-		cin>>m>>n;
+		while(!mapLoaded)
+		{
+			ptf("\n以下是本地的所有地图,输入文件名(包括后缀)以导入,多级目录用反斜杠\\表示。如果你想在游戏窗口复制内容,请先左键拖动选择,然后按回车复制;按右键粘贴;仅限于Windows 10/11。");ent
+			_color(48);
+			system("tree .\\map /f");
+			_color();
+//			system("dir .\\map /s /b");
+//			char _x1[100000]=".\\map\\",_x2[100000];
+			i_input
+			cin>>mapL;
+			mapPath=mapF+mapL;
+			finnn.open(mapPath);
+			if(finnn.is_open())
+			{
+				mapLoaded=true;
+				// 将标准输入重定向到文件流
+				cin.rdbuf(finnn.rdbuf());
+				cin>>m>>n;
+			}
+			else
+			{
+				_color(78);
+				cerr<<"错误: 无法打开地图文件, 请重新输入\a\n";
+				_color();
+				system("pause");
+			}
+		}
 		if(m==-3 and n==-3)
 		{
 			cin>>m>>n;
@@ -1782,9 +1951,29 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 		
 		tx_set();
 		
+		ptf("输入1启用冲榜模式,0不启用。冲榜模式可以设置个人最佳时间和目标时间来练习,模式中含有一些嘲讽性言语,如果不接受请不要开启。");ent
+		char ___x;
+		i_input
+		cin>>___x;
+		if(___x=='1')
+		{
+			raceREC=true;
+			ent ptf("输入本地图个人最佳时间(Personal Best, PB)(允许小数)");ent
+			i_input
+			cin>>recPB;
+			
+			ent ptf("输入本地图目标时间(Goal)(必须小于PB时间,允许小数)");ent
+			i_input
+			cin>>recGOAL;
+		}
+		else
+		{
+			raceREC=false;
+		}
+		
 		while(1)
 		{
-			ptf("\n重新定义按键: 依次输入↑↓←→↖↗↙↘的按键,用空格隔开或不隔开,输入8个一样的字符以使用默认按键(请您千万别输入ASCII以外的字符,求求了)。\n默认：wsadqezc");ent
+			ptf("\n重新定义按键: 依次输入↑↓←→↖↗↙↘的按键,用空格隔开或不隔开,输入8个一样的字符以使用默认按键(请您千万别输入ASCII以外的字符,求求了)。\n默认: wsadqezc");ent
 			i_input
 			cin>>W>>S>>A>>D>>Q>>E>>Z>>C;
 			if(W==S and S==A and A==D and D==Q and Q==E and E==Z and Z==C)
@@ -1819,10 +2008,12 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			disWMIC=true;
 		}
 		
+		set_birth();
 		otpt();
 		cout<<"\n地图的话:\n========\n"<<mapswords<<"\n========\n\n玩家的话:\n********\n"<<playerswords<<"\n********\n\n";
 		cout<<"确认地图纯码:"<<mapOHash(1)<<endl;
 		cout<<getCurrentTimeString()<<endl;
+		cout<<"\nGoal:	"<<recGOAL<<"\nPB:	"<<recPB<<endl;
 		ptf("\nGet Ready… 请做好准备……");ent
 		system("pause");
 		set_birth();
@@ -2458,6 +2649,7 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 			ptf("按回车");i_input
 			getchar();
 			getchar();
+			set_birth();
 			ptf("Get Ready… 请做好准备……");ent
 			system("pause");
 			set_birth();
@@ -2604,8 +2796,25 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 	raceDataHash=PD_hash(raceDataPath,true);
 	cout<<"\n通关报告SHA-256:";
 	_color(160);
-	cout<<raceDataHash<<endl;
+	cout<<raceDataHash;
 	_color();
+	ent ent
+	_color(207);
+	ptf("YOU WIN!!!恭喜通关!!!");
+	_color();
+	if(steps==beststep)
+	{
+		_color(224);
+		ptf("\nYOU MADE SHORTEST MOVE!!!您的步数为最优解!!!");
+		_color();
+	}
+	ent ent
+	if(raceREC)
+	{
+		raceRECDisplayText(msms0);
+		ent
+	}
+	
 	system("pause");
 	system("pause");
 	_d=0;
@@ -2615,6 +2824,33 @@ when you are in 1, you can't use right-back or left-front to the other 1, but yo
 	cin>>f;
 	if(f==0)
 	{
+		char ___x;
+		ptf("输入1修改冲榜模式设置,输入0跳过。");ent
+		i_input
+		cin>>___x;
+		if(___x=='1')
+		{
+			ptf("输入1启用冲榜模式,0不启用。冲榜模式可以设置个人最佳时间和目标时间来练习,模式中含有一些嘲讽性言语,如果不接受请不要开启。");ent
+			char ___y;
+			i_input
+			cin>>___y;
+			if(___y=='1')
+			{
+				raceREC=true;
+				ent ptf("输入本地图个人最佳时间(Personal Best, PB)(允许小数)");ent
+				i_input
+				cin>>recPB;
+				
+				ent ptf("输入本地图目标时间(Goal)(必须小于PB时间,允许小数)");ent
+				i_input
+				cin>>recGOAL;
+			}
+			else
+			{
+				raceREC=false;
+			}
+		}
+		set_birth();
 		otpt();
 		cout<<"\n地图的话:\n========\n"<<mapswords<<"\n========\n\n玩家的话:\n********\n"<<playerswords<<"\n********\n\n";
 		cout<<getCurrentTimeString()<<endl;
